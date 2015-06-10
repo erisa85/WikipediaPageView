@@ -25,10 +25,15 @@ object Wikipedia {
       blaclisted == None
     } map { case (domainAndPage, (clicks, _)) =>
         val domainAndPageArray = domainAndPage.split(" ")
+      if(domainAndPageArray.size == 2)
         (domainAndPageArray(0), (domainAndPageArray(1), clicks))
+      else {
+        println(s"MALFORMED RECORD: $domainAndPage $clicks")
+        (domainAndPage, ("",clicks))
+      }
     }
 
-    filteredData combineByKey (pair => mutable.PriorityQueue(pair)(MinOrder), mergeValue, mergeCombiners) collect()
+    filteredData combineByKey (pair => mutable.PriorityQueue(pair)(MinOrder), mergeValue, mergeCombiners) saveAsTextFile("/Users/erisa/Desktop/output.txt")
   }
 
 
